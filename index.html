@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WS Genrich Calculator - Your Team & Enemy Team</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 960px;
+      margin: 20px auto;
+      padding: 0 15px;
+      background: #f7f9fc;
+      color: #222;
+    }
+    /* Title in black */
+    h1 {
+      text-align: center;
+      color: black; /* Changed from #004080 to black */
+    }
+    h2 {
+      text-align: center;
+      color: #004080; /* Default blue for Your Team title */
+      margin-bottom: 10px;
+    }
+    .team-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .team {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #aaa3;
+      flex: 1 1 440px;
+    }
+    /* Enemy Team red theme */
+    #enemyTeam h2 {
+      color: #ff6384; /* Red title color */
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    /* Your Team header style */
+    #yourTeam th {
+      background: #e1efff;
+      color: black; /* header text color black */
+    }
+    /* Enemy Team header style */
+    #enemyTeam th {
+  background: #ffccd9; /* Match the results background */
+  color: black;
+    }
+    input[type="text"], input[type="number"] {
+      width: 90%;
+      padding: 4px 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input[type="number"] {
+      text-align: center;
+    }
+    /* Results text block under each calculator */
+    .results {
+      background: #e0f0ff;
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    /* Enemy Team results text block red theme */
+    #enemyTeam .results {
+      background: #ffccd9;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 40px;
+    }
+    .csv-upload {
+      margin: 10px 0;
+      padding: 10px;
+      background: #e8f4ff;
+      border-radius: 5px;
+    }
+    .csv-upload label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    /* Chart container white background */
+    #chartContainer {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #aaa3;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>WS Genrich Calculator</h1>
+
+<div class="team-container">
+
+  <section class="team" id="yourTeam">
+    <h2>Your Team</h2>
+
+    <div class="csv-upload">
+      <label for="csvFile">Upload Team CSV:</label>
+      <input type="file" id="csvFile" accept=".csv" />
+      <button id="loadCsvBtn">Load CSV Data</button>
+      <p><small>(Upload CSV output from Compendium to auto-fill player data)</small></p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Player Name</th>
+          <th>Genesis Level (1-15)</th>
+          <th>Enrich Level (1-15)</th>
+        </tr>
+      </thead>
+      <tbody id="yourTeamBody"></tbody>
+    </table>
+
+    <div class="results" id="yourHydroOutput">
+      Hydro Output:
+      <br /><br />P1: <span id="yourP1">0</span>
+      <br /><br />P5: <span id="yourP5">0</span>
+      <br /><br />P10: <span id="yourP10">0</span>
+      <br /><br />Empty Sector: <span id="yourEmpty">0</span>
+    </div>
+  </section>
+
+  <section class="team" id="enemyTeam">
+    <h2>Enemy Team</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Player Name</th>
+          <th>Genesis Level (1-15)</th>
+          <th>Enrich Level (1-15)</th>
+        </tr>
+      </thead>
+      <tbody id="enemyTeamBody"></tbody>
+    </table>
+
+    <div class="results" id="enemyHydroOutput">
+      Hydro Output:
+      <br /><br />P1: <span id="enemyP1">0</span>
+      <br /><br />P5: <span id="enemyP5">0</span>
+      <br /><br />P10: <span id="enemyP10">0</span>
+      <br /><br />Empty Sector: <span id="enemyEmpty">0</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="results" id="chartContainer">
+  <h2 style="text-align:center; color:black">Team Hydro Comparison</h2>
+  <canvas id="comparisonChart" width="600" height="300"></canvas>
+</div>
+
+<div class="footer">
+  Made for Hades' Star WS Genrich Calculations.
+</div>
+
+<script>
+  const genesisData = {
+    1: 60, 2: 70, 3: 80, 4: 90, 5: 100,
+    6: 120, 7: 140, 8: 160, 9: 180, 10: 200,
+    11: 240, 12: 280, 13: 320, 14: 400, 15: 500
+  };
+  const enrichData = {
+    1: 1.01, 2: 1.02, 3: 1.03, 4: 1.04, 5: 1.05,
+    6: 1.06, 7: 1.08, 8: 1.10, 9: 1.12, 10: 1.16,
+    11: 1.20, 12: 1.24, 13: 1.28, 14: 1.32, 15: 1.40
+  };
+
+  function buildTeamRows(containerId) {
+    const tbody = document.getElementById(containerId);
+    for(let i=1; i<=10; i++) {
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>${i}</td>
+        <td><input type="text" placeholder="Player ${i}" data-team="${containerId}" data-index="${i-1}" /></td>
+        <td><input type="number" class="genesis" min="1" max="15" value="1" data-team="${containerId}" data-index="${i-1}" /></td>
+        <td><input type="number" class="enrich" min="1" max="15" value="1" data-team="${containerId}" data-index="${i-1}" /></td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  buildTeamRows('yourTeamBody');
+  buildTeamRows('enemyTeamBody');
+
+  function calculateHydro(teamId) {
+    const tbody = document.getElementById(teamId + 'Body');
+    const genesisInputs = tbody.querySelectorAll('input.genesis');
+    const enrichInputs = tbody.querySelectorAll('input.enrich');
+    const genesisLevels = [], enrichLevels = [];
+
+    for (let i = 0; i < 10; i++) {
+      let g = Number(genesisInputs[i].value);
+      let e = Number(enrichInputs[i].value);
+      g = Math.min(Math.max(g, 1), 15);
+      e = Math.min(Math.max(e, 1), 15);
+      genesisLevels.push(g);
+      enrichLevels.push(e);
+    }
+
+    const top7Genesis = genesisLevels.slice().sort((a, b) => b - a).slice(0, 7);
+    const genesisSum = top7Genesis.reduce((sum, g) => sum + (genesisData[g] || 0), 0);
+    const enrichProduct = enrichLevels.reduce((prod, e) => prod * (enrichData[e] || 1), 1);
+
+    const P1 = genesisSum * enrichProduct * 2;
+    const P5 = genesisSum * enrichProduct * 3;
+    const P10 = genesisSum * enrichProduct * 6;
+    const Empty = genesisSum * enrichProduct;
+
+    return { P1, P5, P10, Empty };
+  }
+
+  let comparisonChart;
+
+  function renderComparisonChart(yourData, enemyData) {
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    // Changed label from 'Empty' to 'Empty Sector'
+    const labels = ['P1', 'P5', 'P10', 'Empty Sector'];
+
+    // Use the exact colors from the headers for consistency
+    const yourBlue = '#e1efff';
+    const enemyRed = '#ffccd9';  // Match the enemy results background color
+
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Your Team',
+          data: [yourData.P1, yourData.P5, yourData.P10, yourData.Empty],
+          backgroundColor: yourBlue,
+          borderColor: '#004080',
+          borderWidth: 1
+        },
+        {
+          label: 'Enemy Team',
+          data: [enemyData.P1, enemyData.P5, enemyData.P10, enemyData.Empty],
+          backgroundColor: enemyRed,
+          borderColor: '#b22240',
+          borderWidth: 1
+        }
+      ]
+    };
+
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#222' }
+          }
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
+              color: '#222'
+            },
+            grid: {
+              color: '#eee'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#222'
+            },
+            grid: {
+              color: '#eee'
+            }
+          }
+        }
+      }
+    };
+
+    if (comparisonChart) {
+      comparisonChart.destroy();
+    }
+    comparisonChart = new Chart(ctx, config);
+  }
+
+  function updateAll() {
+    const yourHydro = calculateHydro('yourTeam');
+    const enemyHydro = calculateHydro('enemyTeam');
+
+    // Update textual outputs for each team
+    document.getElementById('yourP1').textContent = yourHydro.P1.toFixed(0);
+    document.getElementById('yourP5').textContent = yourHydro.P5.toFixed(0);
+    document.getElementById('yourP10').textContent = yourHydro.P10.toFixed(0);
+    document.getElementById('yourEmpty').textContent = yourHydro.Empty.toFixed(0);
+
+    document.getElementById('enemyP1').textContent = enemyHydro.P1.toFixed(0);
+    document.getElementById('enemyP5').textContent = enemyHydro.P5.toFixed(0);
+    document.getElementById('enemyP10').textContent = enemyHydro.P10.toFixed(0);
+    document.getElementById('enemyEmpty').textContent = enemyHydro.Empty.toFixed(0);
+
+    renderComparisonChart(yourHydro, enemyHydro);
+  }
+
+  ['yourTeamBody', 'enemyTeamBody'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateAll);
+  });
+
+  document.getElementById('loadCsvBtn').addEventListener('click', function() {
+    const fileInput = document.getElementById('csvFile');
+    if (!fileInput.files.length) {
+      alert('Please select a CSV file first');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const content = e.target.result;
+      processCSV(content);
+    };
+    reader.readAsText(fileInput.files[0]);
+  });
+
+  function processCSV(csvData) {
+    if (csvData.charCodeAt(0) === 0xFEFF) {
+      csvData = csvData.substring(1);
+    }
+    const lines = csvData.split(/\r?\n/).map(line => line.trim()).filter(line => line !== '');
+    const headerIndex = lines.findIndex(line => line.includes('DiscordTag,Name'));
+    if (headerIndex === -1) {
+      alert('Error: Could not find header row in CSV');
+      return;
+    }
+    const dataLines = lines.slice(headerIndex + 1).slice(0, 10);
+    const nameInputs = document.querySelectorAll('#yourTeamBody input[type="text"]');
+    const genesisInputs = document.querySelectorAll('#yourTeamBody input.genesis');
+    const enrichInputs = document.querySelectorAll('#yourTeamBody input.enrich');
+
+    nameInputs.forEach(input => input.value = '');
+    genesisInputs.forEach(input => input.value = '1');
+    enrichInputs.forEach(input => input.value = '1');
+
+    dataLines.forEach((line, i) => {
+      const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      const name = parts[1]?.trim() || '';
+      const genesis = parseInt(parts[24]) || 1;
+      const enrich = parseInt(parts[25]) || 1;
+
+      nameInputs[i].value = name;
+      genesisInputs[i].value = Math.max(1, Math.min(15, genesis));
+      enrichInputs[i].value = Math.max(1, Math.min(15, enrich));
+    });
+
+    updateAll();
+  }
+
+  window.onload = updateAll;
+</script>
+
+</body>
+</html>
