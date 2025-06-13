@@ -4,13 +4,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WS Calculators - Hades' Star Tools</title>
+  <title>White Star Calculators</title>
   <style>
     :root {
       --your-team-blue: #004080;
       --your-team-light-blue: #e1efff;
       --enemy-team-red: #ff6384;
       --enemy-team-light-red: #ffccd9;
+      --button-bg: #f4f6fa;
+      --button-bg-hover: #e0e3e8;
+      --button-bg-active: #d1d5db;
+      --button-border: #cfd8dc;
+      --button-text: #222;
+      --button-text-active: #004080;
     }
     body {
       font-family: Arial, sans-serif;
@@ -38,26 +44,74 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+    /* Modern, minimal button style */
+    button,
     .tab-btn {
-      padding: 10px 20px;
-      background: #ddd;
-      border: none;
-      border-radius: 5px 5px 0 0;
+      padding: 10px 24px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: 1.5px solid var(--button-border);
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 1.5px 6px rgba(0,0,0,0.06);
       cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s;
+      outline: none;
+      transition: 
+        background 0.18s,
+        color 0.18s,
+        border-color 0.18s,
+        box-shadow 0.18s,
+        transform 0.10s;
+      appearance: none;
+      user-select: none;
+      margin: 0;
+      display: inline-block;
+    }
+    button:disabled,
+    .tab-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    button:hover,
+    .tab-btn:hover {
+      background: var(--button-bg-hover);
+      border-color: #b0bec5;
+      color: var(--button-text-active);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+      transform: translateY(-1px) scale(1.02);
+    }
+    button:active,
+    .tab-btn:active {
+      background: var(--button-bg-active);
+      border-color: #90a4ae;
+      color: var(--button-text-active);
+      box-shadow: 0 1.5px 6px rgba(0,0,0,0.06);
+      transform: scale(0.98);
+    }
+    .tab-btn {
+      border-radius: 18px 18px 0 0;
+      border-bottom: none;
+      background: var(--button-bg);
+      color: var(--button-text);
+      margin-bottom: -2px;
+      position: relative;
+      z-index: 1;
     }
     .tab-btn.active {
-      background: white;
+      background: #fff;
       color: var(--your-team-blue);
-      box-shadow: 0 -3px 5px rgba(0,0,0,0.1);
+      border-bottom: 2.5px solid #fff;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      z-index: 2;
     }
     .calculator-content {
       display: none;
       background: white;
       padding: 15px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
     }
     .calculator-content.active {
       display: block;
@@ -72,15 +126,15 @@
     .team {
       background: white;
       padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
       flex: 1 1 440px;
     }
     #yourTeam h2 {
       color: var(--your-team-blue);
     }
     #enemyTeam h2 {
-  color: #b22240;
+      color: #b22240;
     }
     table {
       width: 100%;
@@ -105,15 +159,26 @@
       padding: 4px 6px;
       font-size: 1rem;
       box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #cfd8dc;
+      background: #f8fafc;
+      transition: border-color 0.18s;
     }
     input[type="number"] {
       text-align: center;
     }
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: var(--your-team-blue);
+      outline: none;
+      background: #fff;
+    }
     .results {
       padding: 12px;
       margin-top: 20px;
-      border-radius: 5px;
+      border-radius: 16px;
       font-weight: bold;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
     }
     #yourTeam .results {
       background: var(--your-team-light-blue);
@@ -130,13 +195,84 @@
     .csv-upload {
       margin: 10px 0;
       padding: 10px;
-      background: #e8f4ff;
-      border-radius: 5px;
+      background: var(--your-team-light-blue);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 1rem;
     }
-    .csv-upload label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+    .csv-upload label,
+    .csv-upload .csv-file-label,
+    .csv-upload small {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 0;
+      margin-right: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .csv-upload small {
+      font-weight: 400;
+      color: #666;
+      margin-left: 0.5em;
+    }
+    /* Custom file input styling */
+    .csv-upload input[type="file"] {
+      display: none;
+    }
+    .csv-file-label {
+      display: inline-block;
+      padding: 10px 24px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: 1.5px solid var(--button-border);
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 1.5px 6px rgba(0,0,0,0.06);
+      cursor: pointer;
+      outline: none;
+      transition: 
+        background 0.18s,
+        color 0.18s,
+        border-color 0.18s,
+        box-shadow 0.18s,
+        transform 0.10s;
+      appearance: none;
+      user-select: none;
+      margin: 0;
+      margin-right: 0.5em;
+      vertical-align: middle;
+    }
+    .csv-file-label:hover {
+      background: var(--button-bg-hover);
+      border-color: #b0bec5;
+      color: var(--button-text-active);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+      transform: translateY(-1px) scale(1.02);
+    }
+    .csv-file-label:active {
+      background: var(--button-bg-active);
+      border-color: #90a4ae;
+      color: var(--button-text-active);
+      box-shadow: 0 1.5px 6px rgba(0,0,0,0.06);
+      transform: scale(0.98);
+    }
+    .csv-upload .csv-file-name {
+      font-size: 1rem;
+      color: #666;
+      margin-right: 0.5em;
+      font-weight: 400;
+      vertical-align: middle;
+      display: inline-block;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .mining-speed-list {
       display: flex;
@@ -179,7 +315,7 @@
 </head>
 <body>
 
-<h1>WS Calculators</h1>
+<h1>White Star Calculators</h1>
 
 <div class="tab-nav">
   <button class="tab-btn active" data-tab="genrich">Genrich Calculator</button>
@@ -192,10 +328,11 @@
     <section class="team" id="yourTeam">
       <h2>Your Team</h2>
       <div class="csv-upload">
-        <label for="genrichCsvFile">Upload Team CSV:</label>
+        <label class="csv-file-label" for="genrichCsvFile">Choose File</label>
         <input type="file" id="genrichCsvFile" accept=".csv" />
-        <button id="genrichLoadCsvBtn">Load CSV Data</button>
-        <p><small>(Upload CSV output from Compendium to auto-fill player data)</small></p>
+        <span class="csv-file-name" id="genrichCsvFileName">No file chosen</span>
+        <button id="genrichLoadCsvBtn">Upload Team CSV</button>
+        <small>(Upload CSV output from Compendium to auto-fill player data)</small>
       </div>
       <table>
         <thead>
@@ -257,10 +394,11 @@
     <section class="team" id="yourTeam">
       <h2>Your Team</h2>
       <div class="csv-upload">
-        <label for="miningCsvFile">Upload Team CSV:</label>
+        <label class="csv-file-label" for="miningCsvFile">Choose File</label>
         <input type="file" id="miningCsvFile" accept=".csv" />
-        <button id="miningLoadCsvBtn">Load CSV Data</button>
-        <p><small>(Upload CSV output from Compendium to auto-fill player data)</small></p>
+        <span class="csv-file-name" id="miningCsvFileName">No file chosen</span>
+        <button id="miningLoadCsvBtn">Upload Team CSV</button>
+        <small>(Upload CSV output from Compendium to auto-fill player data)</small>
       </div>
       <table>
         <thead>
@@ -341,6 +479,22 @@
       document.getElementById(`${btn.dataset.tab}-calculator`).classList.add('active');
     });
   });
+
+  // Custom file input logic for both calculators
+  // Only listen to file input's change event, do not bind click to label
+  function setupCustomFileInput(fileInputId, fileNameId) {
+    const fileInput = document.getElementById(fileInputId);
+    const fileNameSpan = document.getElementById(fileNameId);
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) {
+        fileNameSpan.textContent = fileInput.files[0].name;
+      } else {
+        fileNameSpan.textContent = 'No file chosen';
+      }
+    });
+  }
+  setupCustomFileInput('genrichCsvFile', 'genrichCsvFileName');
+  setupCustomFileInput('miningCsvFile', 'miningCsvFileName');
 
   // ======================
   // Genrich Calculator
