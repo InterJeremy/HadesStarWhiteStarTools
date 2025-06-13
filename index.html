@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>White Star Calculators</title>
+  <title>Hades' Star White Star Tools</title>
   <style>
     :root {
       --your-team-blue: #004080;
@@ -44,7 +44,6 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-    /* Modern, minimal button style */
     button,
     .tab-btn {
       padding: 10px 24px;
@@ -177,14 +176,21 @@
       padding: 12px;
       margin-top: 20px;
       border-radius: 16px;
-      font-weight: bold;
       box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      /* No font-weight here, handled below */
     }
+    /* Team results area backgrounds */
     #yourTeam .results {
       background: var(--your-team-light-blue);
     }
     #enemyTeam .results {
       background: var(--enemy-team-light-red);
+    }
+    /* Chart card backgrounds and shadow match .team, background is white */
+    #genrichChartContainer,
+    #miningChartContainer {
+      background: white;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
     }
     .footer {
       text-align: center;
@@ -220,7 +226,6 @@
       color: #666;
       margin-left: 0.5em;
     }
-    /* Custom file input styling */
     .csv-upload input[type="file"] {
       display: none;
     }
@@ -281,7 +286,11 @@
       margin-top: 5px;
     }
     .mining-speed-item {
+      font-weight: bold; /* Player name is bold */
       white-space: nowrap;
+    }
+    .mining-speed-item span {
+      font-weight: normal !important; /* Value is normal */
     }
     .chart-row {
       display: flex;
@@ -306,8 +315,23 @@
       margin-top: 20px;
       flex-wrap: wrap;
     }
+    .hydro-output {
+      font-weight: bold;
+    }
     .hydro-output span {
-      font-weight: normal;
+      font-weight: normal !important;
+    }
+    /* Make Hydro Output/Mining Speed/Total label bold, value normal */
+    .results > div:first-child {
+      font-weight: bold;
+    }
+    #yourTotal,
+    #enemyTotal {
+      font-weight: normal !important;
+    }
+    /* Make "Total:" label bold in mining speed calculator */
+    .total-label {
+      font-weight: bold;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -315,7 +339,7 @@
 </head>
 <body>
 
-<h1>White Star Calculators</h1>
+<h1>Hades' Star White Star Tools</h1>
 
 <div class="tab-nav">
   <button class="tab-btn active" data-tab="genrich">Genrich Calculator</button>
@@ -416,7 +440,7 @@
       <div class="results" id="yourMiningOutput">
         <div>Mining Speed:</div>
         <div class="mining-speed-list" id="yourMiningSpeeds"></div>
-        <div style="margin-top: 10px;">Total: <span id="yourTotal">0</span></div>
+        <div style="margin-top: 10px;"><span class="total-label">Total:</span> <span id="yourTotal">0</span></div>
       </div>
     </section>
     <section class="team" id="enemyTeam">
@@ -437,7 +461,7 @@
       <div class="results" id="enemyMiningOutput">
         <div>Mining Speed:</div>
         <div class="mining-speed-list" id="enemyMiningSpeeds"></div>
-        <div style="margin-top: 10px;">Total: <span id="enemyTotal">0</span></div>
+        <div style="margin-top: 10px;"><span class="total-label">Total:</span> <span id="enemyTotal">0</span></div>
       </div>
     </section>
   </div>
@@ -449,7 +473,7 @@
         <canvas id="yourTeamChart" width="400" height="250"></canvas>
       </div>
       <div class="chart-container">
-        <div class="chart-title" style="color: var(--enemy-team-red);">Enemy Team</div>
+        <div class="chart-title" style="color: #b22240;">Enemy Team</div>
         <canvas id="enemyTeamChart" width="400" height="250"></canvas>
       </div>
     </div>
@@ -481,7 +505,6 @@
   });
 
   // Custom file input logic for both calculators
-  // Only listen to file input's change event, do not bind click to label
   function setupCustomFileInput(fileInputId, fileNameId) {
     const fileInput = document.getElementById(fileInputId);
     const fileNameSpan = document.getElementById(fileNameId);
@@ -515,7 +538,6 @@
 
     // Save team data to localStorage
     saveToLocalStorage() {
-      // Save both teams
       localStorage.setItem('genrichYourTeam', JSON.stringify(this.getTeamInputs('genrichYourTeamBody')));
       localStorage.setItem('genrichEnemyTeam', JSON.stringify(this.getTeamInputs('genrichEnemyTeamBody')));
     },
@@ -928,7 +950,8 @@
       data.players.forEach(player => {
         const item = document.createElement('div');
         item.className = 'mining-speed-item';
-        item.textContent = `${player.name}: ${player.roundedSpeed}`;
+        // Player name bold, value normal
+        item.innerHTML = `${player.name}: <span>${player.roundedSpeed}</span>`;
         container.appendChild(item);
       });
       totalElement.textContent = data.total;
