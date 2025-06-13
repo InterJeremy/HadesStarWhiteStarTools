@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WS Calculators - Hades' Star Tools</title>
   <style>
-    /* Shared Styles */
     :root {
       --your-team-blue: #004080;
       --your-team-light-blue: #e1efff;
       --enemy-team-red: #ff6384;
       --enemy-team-light-red: #ffccd9;
     }
-    
     body {
       font-family: Arial, sans-serif;
       max-width: 960px;
@@ -21,21 +20,17 @@
       background: #f7f9fc;
       color: #222;
     }
-    
     h1 {
       text-align: center;
       color: black;
       margin-bottom: 5px;
     }
-    
     .subtitle {
       text-align: center;
       color: #666;
       margin-bottom: 20px;
       font-style: italic;
     }
-    
-    /* Tab Navigation */
     .tab-nav {
       display: flex;
       justify-content: center;
@@ -43,7 +38,6 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-    
     .tab-btn {
       padding: 10px 20px;
       background: #ddd;
@@ -53,14 +47,11 @@
       font-weight: bold;
       transition: all 0.3s;
     }
-    
     .tab-btn.active {
       background: white;
       color: var(--your-team-blue);
       box-shadow: 0 -3px 5px rgba(0,0,0,0.1);
     }
-    
-    /* Calculator Containers */
     .calculator-content {
       display: none;
       background: white;
@@ -68,12 +59,9 @@
       border-radius: 5px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    
     .calculator-content.active {
       display: block;
     }
-    
-    /* Shared Team Styles */
     .team-container {
       display: flex;
       gap: 20px;
@@ -81,7 +69,6 @@
       justify-content: center;
       margin-bottom: 20px;
     }
-    
     .team {
       background: white;
       padding: 15px 20px;
@@ -89,95 +76,77 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       flex: 1 1 440px;
     }
-    
     #yourTeam h2 {
       color: var(--your-team-blue);
     }
-    
     #enemyTeam h2 {
       color: var(--enemy-team-red);
     }
-    
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-    
     th, td {
       border: 1px solid #ccc;
       padding: 6px 8px;
       text-align: center;
     }
-    
     #yourTeam th {
       background: var(--your-team-light-blue);
       color: black;
     }
-    
     #enemyTeam th {
       background: var(--enemy-team-light-red);
       color: black;
     }
-    
     input[type="text"], input[type="number"] {
       width: 90%;
       padding: 4px 6px;
       font-size: 1rem;
       box-sizing: border-box;
     }
-    
     input[type="number"] {
       text-align: center;
     }
-    
     .results {
       padding: 12px;
       margin-top: 20px;
       border-radius: 5px;
       font-weight: bold;
     }
-    
     #yourTeam .results {
       background: var(--your-team-light-blue);
     }
-    
     #enemyTeam .results {
       background: var(--enemy-team-light-red);
     }
-    
     .footer {
       text-align: center;
       font-size: 0.9rem;
       color: #666;
       margin-top: 40px;
     }
-    
     .csv-upload {
       margin: 10px 0;
       padding: 10px;
       background: #e8f4ff;
       border-radius: 5px;
     }
-    
     .csv-upload label {
       display: block;
       margin-bottom: 5px;
       font-weight: bold;
     }
-    
-    /* Mining Speed Specific */
     .mining-speed-list {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 5px;
     }
-    
     .mining-speed-item {
       white-space: nowrap;
     }
-    
     .chart-row {
       display: flex;
       flex-wrap: wrap;
@@ -185,18 +154,15 @@
       gap: 20px;
       margin-top: 20px;
     }
-    
     .chart-container {
       flex: 1 1 400px;
       min-width: 0;
     }
-    
     .chart-title {
       text-align: center;
       margin-bottom: 10px;
       font-weight: bold;
     }
-    
     .download-buttons {
       display: flex;
       justify-content: center;
@@ -204,8 +170,6 @@
       margin-top: 20px;
       flex-wrap: wrap;
     }
-    
-    /* Genrich Specific */
     .hydro-output span {
       font-weight: normal;
     }
@@ -228,14 +192,12 @@
   <div class="team-container">
     <section class="team" id="yourTeam">
       <h2>Your Team</h2>
-
       <div class="csv-upload">
         <label for="genrichCsvFile">Upload Team CSV:</label>
         <input type="file" id="genrichCsvFile" accept=".csv" />
         <button id="genrichLoadCsvBtn">Load CSV Data</button>
         <p><small>(Upload CSV output from Compendium to auto-fill player data)</small></p>
       </div>
-
       <table>
         <thead>
           <tr>
@@ -247,7 +209,6 @@
         </thead>
         <tbody id="genrichYourTeamBody"></tbody>
       </table>
-
       <div class="results" id="yourHydroOutput">
         <div>Hydro Output:</div>
         <div class="hydro-output">
@@ -258,7 +219,6 @@
         </div>
       </div>
     </section>
-
     <section class="team" id="enemyTeam">
       <h2>Enemy Team</h2>
       <table>
@@ -272,7 +232,6 @@
         </thead>
         <tbody id="genrichEnemyTeamBody"></tbody>
       </table>
-
       <div class="results" id="enemyHydroOutput">
         <div>Hydro Output:</div>
         <div class="hydro-output">
@@ -284,7 +243,6 @@
       </div>
     </section>
   </div>
-
   <div class="results" id="genrichChartContainer">
     <h2 style="text-align:center; color:black">Team Hydro Comparison</h2>
     <canvas id="genrichComparisonChart" width="600" height="300"></canvas>
@@ -299,14 +257,12 @@
   <div class="team-container">
     <section class="team" id="yourTeam">
       <h2>Your Team</h2>
-
       <div class="csv-upload">
         <label for="miningCsvFile">Upload Team CSV:</label>
         <input type="file" id="miningCsvFile" accept=".csv" />
         <button id="miningLoadCsvBtn">Load CSV Data</button>
         <p><small>(Upload CSV output from Compendium to auto-fill player data)</small></p>
       </div>
-
       <table>
         <thead>
           <tr>
@@ -320,14 +276,12 @@
         </thead>
         <tbody id="miningYourTeamBody"></tbody>
       </table>
-
       <div class="results" id="yourMiningOutput">
         <div>Mining Speed:</div>
         <div class="mining-speed-list" id="yourMiningSpeeds"></div>
         <div style="margin-top: 10px;">Total: <span id="yourTotal">0</span></div>
       </div>
     </section>
-
     <section class="team" id="enemyTeam">
       <h2>Enemy Team</h2>
       <table>
@@ -343,7 +297,6 @@
         </thead>
         <tbody id="miningEnemyTeamBody"></tbody>
       </table>
-
       <div class="results" id="enemyMiningOutput">
         <div>Mining Speed:</div>
         <div class="mining-speed-list" id="enemyMiningSpeeds"></div>
@@ -351,10 +304,8 @@
       </div>
     </section>
   </div>
-
   <div class="results" id="miningChartContainer">
     <h2 style="text-align:center; color:black">Team Mining Speed Comparison</h2>
-    
     <div class="chart-row">
       <div class="chart-container">
         <div class="chart-title" style="color: var(--your-team-blue);">Your Team</div>
@@ -365,7 +316,6 @@
         <canvas id="enemyTeamChart" width="400" height="250"></canvas>
       </div>
     </div>
-    
     <div class="download-buttons">
       <button onclick="downloadMiningChart('yourTeamChart', 'your_team_mining.png')">Download Your Team</button>
       <button onclick="downloadMiningChart('enemyTeamChart', 'enemy_team_mining.png')">Download Enemy Team</button>
@@ -385,7 +335,6 @@
       // Update active tab
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      
       // Show selected calculator
       document.querySelectorAll('.calculator-content').forEach(content => {
         content.classList.remove('active');
@@ -411,16 +360,66 @@
     },
     comparisonChart: null,
 
+    // Save team data to localStorage
+    saveToLocalStorage() {
+      // Save both teams
+      localStorage.setItem('genrichYourTeam', JSON.stringify(this.getTeamInputs('genrichYourTeamBody')));
+      localStorage.setItem('genrichEnemyTeam', JSON.stringify(this.getTeamInputs('genrichEnemyTeamBody')));
+    },
+
+    // Load team data from localStorage
+    loadFromLocalStorage() {
+      const yourTeam = localStorage.getItem('genrichYourTeam');
+      const enemyTeam = localStorage.getItem('genrichEnemyTeam');
+      if (yourTeam) this.setTeamInputs('genrichYourTeamBody', JSON.parse(yourTeam));
+      if (enemyTeam) this.setTeamInputs('genrichEnemyTeamBody', JSON.parse(enemyTeam));
+    },
+
+    // Get team input values as array of objects
+    getTeamInputs(containerId) {
+      const tbody = document.getElementById(containerId);
+      const nameInputs = tbody.querySelectorAll('input[type="text"]');
+      const genesisInputs = tbody.querySelectorAll('input.genesis');
+      const enrichInputs = tbody.querySelectorAll('input.enrich');
+      const arr = [];
+      for (let i = 0; i < 10; i++) {
+        arr.push({
+          name: nameInputs[i].value,
+          genesis: genesisInputs[i].value,
+          enrich: enrichInputs[i].value
+        });
+      }
+      return arr;
+    },
+
+    // Set team input values from array of objects
+    setTeamInputs(containerId, arr) {
+      const tbody = document.getElementById(containerId);
+      const nameInputs = tbody.querySelectorAll('input[type="text"]');
+      const genesisInputs = tbody.querySelectorAll('input.genesis');
+      const enrichInputs = tbody.querySelectorAll('input.enrich');
+      for (let i = 0; i < 10; i++) {
+        if (arr[i]) {
+          nameInputs[i].value = arr[i].name || '';
+          genesisInputs[i].value = arr[i].genesis || '1';
+          enrichInputs[i].value = arr[i].enrich || '1';
+        }
+      }
+    },
+
     // Initialize the calculator
     init() {
       this.buildTeamRows('genrichYourTeamBody');
       this.buildTeamRows('genrichEnemyTeamBody');
-      
+      // Load from localStorage if exists
+      this.loadFromLocalStorage();
       // Set up event listeners
       ['genrichYourTeamBody', 'genrichEnemyTeamBody'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => this.updateAll());
+        document.getElementById(id).addEventListener('input', () => {
+          this.updateAll();
+          this.saveToLocalStorage();
+        });
       });
-
       // CSV upload
       document.getElementById('genrichLoadCsvBtn').addEventListener('click', () => {
         const fileInput = document.getElementById('genrichCsvFile');
@@ -429,10 +428,12 @@
           return;
         }
         const reader = new FileReader();
-        reader.onload = (e) => this.processCSV(e.target.result);
+        reader.onload = (e) => {
+          this.processCSV(e.target.result);
+          this.saveToLocalStorage();
+        };
         reader.readAsText(fileInput.files[0]);
       });
-
       this.updateAll();
     },
 
@@ -458,7 +459,6 @@
       const genesisInputs = tbody.querySelectorAll('input.genesis');
       const enrichInputs = tbody.querySelectorAll('input.enrich');
       const genesisLevels = [], enrichLevels = [];
-
       for (let i = 0; i < 10; i++) {
         let g = Number(genesisInputs[i].value);
         let e = Number(enrichInputs[i].value);
@@ -467,16 +467,13 @@
         genesisLevels.push(g);
         enrichLevels.push(e);
       }
-
       const top7Genesis = genesisLevels.slice().sort((a, b) => b - a).slice(0, 7);
       const genesisSum = top7Genesis.reduce((sum, g) => sum + (this.genesisData[g] || 0), 0);
       const enrichProduct = enrichLevels.reduce((prod, e) => prod * (this.enrichData[e] || 1), 1);
-
       const P1 = genesisSum * enrichProduct * 2;
       const P5 = genesisSum * enrichProduct * 3;
       const P10 = genesisSum * enrichProduct * 6;
       const Empty = genesisSum * enrichProduct;
-
       return { P1, P5, P10, Empty };
     },
 
@@ -484,7 +481,6 @@
     renderComparisonChart(yourData, enemyData) {
       const ctx = document.getElementById('genrichComparisonChart').getContext('2d');
       const labels = ['P1', 'P5', 'P10', 'Empty Sector'];
-
       const data = {
         labels: labels,
         datasets: [
@@ -504,7 +500,6 @@
           }
         ]
       };
-
       const config = {
         type: 'bar',
         data: data,
@@ -551,7 +546,6 @@
         },
         plugins: [ChartDataLabels]
       };
-
       if (this.comparisonChart) {
         this.comparisonChart.destroy();
       }
@@ -573,22 +567,18 @@
       const nameInputs = document.querySelectorAll('#genrichYourTeamBody input[type="text"]');
       const genesisInputs = document.querySelectorAll('#genrichYourTeamBody input.genesis');
       const enrichInputs = document.querySelectorAll('#genrichYourTeamBody input.enrich');
-
       nameInputs.forEach(input => input.value = '');
       genesisInputs.forEach(input => input.value = '1');
       enrichInputs.forEach(input => input.value = '1');
-
       dataLines.forEach((line, i) => {
         const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         const name = parts[1]?.trim() || '';
         const genesis = parseInt(parts[24]) || 1;
         const enrich = parseInt(parts[25]) || 1;
-
         nameInputs[i].value = name;
         genesisInputs[i].value = Math.max(1, Math.min(15, genesis));
         enrichInputs[i].value = Math.max(1, Math.min(15, enrich));
       });
-
       this.updateAll();
     },
 
@@ -596,18 +586,15 @@
     updateAll() {
       const yourHydro = this.calculateHydro('genrichYourTeam');
       const enemyHydro = this.calculateHydro('genrichEnemyTeam');
-
       // Update textual outputs
       document.getElementById('yourP1').textContent = yourHydro.P1.toFixed(0);
       document.getElementById('yourP5').textContent = yourHydro.P5.toFixed(0);
       document.getElementById('yourP10').textContent = yourHydro.P10.toFixed(0);
       document.getElementById('yourEmpty').textContent = yourHydro.Empty.toFixed(0);
-
       document.getElementById('enemyP1').textContent = enemyHydro.P1.toFixed(0);
       document.getElementById('enemyP5').textContent = enemyHydro.P5.toFixed(0);
       document.getElementById('enemyP10').textContent = enemyHydro.P10.toFixed(0);
       document.getElementById('enemyEmpty').textContent = enemyHydro.Empty.toFixed(0);
-
       this.renderComparisonChart(yourHydro, enemyHydro);
     }
   };
@@ -616,7 +603,6 @@
   // Mining Speed Calculator
   // ======================
   const miningCalculator = {
-    // Data
     minerData: {
       1: 20.0, 2: 24.0, 3: 30.0, 4: 40.0, 5: 50.0, 6: 54.5, 7: 60.0
     },
@@ -642,16 +628,73 @@
     yourTeamChart: null,
     enemyTeamChart: null,
 
+    // Save team data to localStorage
+    saveToLocalStorage() {
+      localStorage.setItem('miningYourTeam', JSON.stringify(this.getTeamInputs('miningYourTeamBody')));
+      localStorage.setItem('miningEnemyTeam', JSON.stringify(this.getTeamInputs('miningEnemyTeamBody')));
+    },
+
+    // Load team data from localStorage
+    loadFromLocalStorage() {
+      const yourTeam = localStorage.getItem('miningYourTeam');
+      const enemyTeam = localStorage.getItem('miningEnemyTeam');
+      if (yourTeam) this.setTeamInputs('miningYourTeamBody', JSON.parse(yourTeam));
+      if (enemyTeam) this.setTeamInputs('miningEnemyTeamBody', JSON.parse(enemyTeam));
+    },
+
+    // Get team input values as array of objects
+    getTeamInputs(containerId) {
+      const tbody = document.getElementById(containerId);
+      const nameInputs = tbody.querySelectorAll('input[type="text"]');
+      const minerInputs = tbody.querySelectorAll('input.miner');
+      const miningBoostInputs = tbody.querySelectorAll('input.miningboost');
+      const remoteInputs = tbody.querySelectorAll('input.remote');
+      const hreplicatorInputs = tbody.querySelectorAll('input.hreplicator');
+      const arr = [];
+      for (let i = 0; i < 10; i++) {
+        arr.push({
+          name: nameInputs[i].value,
+          miner: minerInputs[i].value,
+          miningboost: miningBoostInputs[i].value,
+          remote: remoteInputs[i].value,
+          hreplicator: hreplicatorInputs[i].value
+        });
+      }
+      return arr;
+    },
+
+    // Set team input values from array of objects
+    setTeamInputs(containerId, arr) {
+      const tbody = document.getElementById(containerId);
+      const nameInputs = tbody.querySelectorAll('input[type="text"]');
+      const minerInputs = tbody.querySelectorAll('input.miner');
+      const miningBoostInputs = tbody.querySelectorAll('input.miningboost');
+      const remoteInputs = tbody.querySelectorAll('input.remote');
+      const hreplicatorInputs = tbody.querySelectorAll('input.hreplicator');
+      for (let i = 0; i < 10; i++) {
+        if (arr[i]) {
+          nameInputs[i].value = arr[i].name || '';
+          minerInputs[i].value = arr[i].miner || '1';
+          miningBoostInputs[i].value = arr[i].miningboost || '1';
+          remoteInputs[i].value = arr[i].remote || '1';
+          hreplicatorInputs[i].value = arr[i].hreplicator || '1';
+        }
+      }
+    },
+
     // Initialize the calculator
     init() {
       this.buildTeamRows('miningYourTeamBody');
       this.buildTeamRows('miningEnemyTeamBody');
-      
+      // Load from localStorage if exists
+      this.loadFromLocalStorage();
       // Set up event listeners
       ['miningYourTeamBody', 'miningEnemyTeamBody'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => this.updateAll());
+        document.getElementById(id).addEventListener('input', () => {
+          this.updateAll();
+          this.saveToLocalStorage();
+        });
       });
-
       // CSV upload
       document.getElementById('miningLoadCsvBtn').addEventListener('click', () => {
         const fileInput = document.getElementById('miningCsvFile');
@@ -660,10 +703,12 @@
           return;
         }
         const reader = new FileReader();
-        reader.onload = (e) => this.processCSV(e.target.result);
+        reader.onload = (e) => {
+          this.processCSV(e.target.result);
+          this.saveToLocalStorage();
+        };
         reader.readAsText(fileInput.files[0]);
       });
-
       this.updateAll();
     },
 
@@ -693,22 +738,18 @@
       const miningBoostInputs = tbody.querySelectorAll('input.miningboost');
       const remoteInputs = tbody.querySelectorAll('input.remote');
       const hreplicatorInputs = tbody.querySelectorAll('input.hreplicator');
-      
       const playerData = [];
       let totalSpeed = 0;
-
       for (let i = 0; i < 10; i++) {
         const name = nameInputs[i].value || `Player ${i+1}`;
         let miner = Math.min(Math.max(Number(minerInputs[i].value), 1), 7);
         let miningboost = Math.min(Math.max(Number(miningBoostInputs[i].value), 1), 15);
         let remote = Math.min(Math.max(Number(remoteInputs[i].value), 1), 15);
         let hreplicator = Math.min(Math.max(Number(hreplicatorInputs[i].value), 1), 15);
-        
         const speed = 0.5 * (this.minerData[miner] || 20.0) * 
                      (this.remoteMiningData[remote] || 2) * 
                      ((this.miningBoostData[miningboost] || 1.0) + 1) * 
                      (this.hydroReplicatorData[hreplicator] || 1.0);
-        
         playerData.push({
           name: name,
           speed: speed,
@@ -718,10 +759,8 @@
           remote: remote,
           hreplicator: hreplicator
         });
-        
         totalSpeed += speed;
       }
-
       return {
         players: playerData,
         total: Math.round(totalSpeed)
@@ -732,7 +771,6 @@
     updatePlayerSpeedDisplay(teamId, data) {
       const container = document.getElementById(teamId + 'MiningSpeeds');
       const totalElement = document.getElementById(teamId + 'Total');
-      
       container.innerHTML = '';
       data.players.forEach(player => {
         const item = document.createElement('div');
@@ -740,7 +778,6 @@
         item.textContent = `${player.name}: ${player.roundedSpeed}`;
         container.appendChild(item);
       });
-      
       totalElement.textContent = data.total;
     },
 
@@ -836,11 +873,9 @@
     renderCharts(yourData, enemyData) {
       if (this.yourTeamChart) this.yourTeamChart.destroy();
       if (this.enemyTeamChart) this.enemyTeamChart.destroy();
-
       // Render Your Team chart
       const yourCtx = document.getElementById('yourTeamChart').getContext('2d');
       this.yourTeamChart = new Chart(yourCtx, this.createChartConfig(yourData, 'Your Team', '#004080'));
-
       // Render Enemy Team chart
       const enemyCtx = document.getElementById('enemyTeamChart').getContext('2d');
       this.enemyTeamChart = new Chart(enemyCtx, this.createChartConfig(enemyData, 'Enemy Team', '#ff6384'));
@@ -863,13 +898,11 @@
       const miningBoostInputs = document.querySelectorAll('#miningYourTeamBody input.miningboost');
       const remoteInputs = document.querySelectorAll('#miningYourTeamBody input.remote');
       const hreplicatorInputs = document.querySelectorAll('#miningYourTeamBody input.hreplicator');
-
       nameInputs.forEach(input => input.value = '');
       minerInputs.forEach(input => input.value = '1');
       miningBoostInputs.forEach(input => input.value = '1');
       remoteInputs.forEach(input => input.value = '1');
       hreplicatorInputs.forEach(input => input.value = '1');
-
       dataLines.forEach((line, i) => {
         const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         const name = parts[1]?.trim() || '';
@@ -877,14 +910,12 @@
         const miningboost = parseInt(parts[20]) || 1;
         const remote = parseInt(parts[23]) || 1;
         const hreplicator = parseInt(parts[21]) || 1;
-
         nameInputs[i].value = name;
         minerInputs[i].value = Math.max(1, Math.min(7, miner));
         miningBoostInputs[i].value = Math.max(1, Math.min(15, miningboost));
         remoteInputs[i].value = Math.max(1, Math.min(15, remote));
         hreplicatorInputs[i].value = Math.max(1, Math.min(15, hreplicator));
       });
-
       this.updateAll();
     },
 
@@ -892,7 +923,6 @@
     updateAll() {
       const yourData = this.calculateMiningSpeed('miningYourTeam');
       const enemyData = this.calculateMiningSpeed('miningEnemyTeam');
-
       this.updatePlayerSpeedDisplay('your', yourData);
       this.updatePlayerSpeedDisplay('enemy', enemyData);
       this.renderCharts(yourData, enemyData);
@@ -908,52 +938,39 @@
     const ctx = tempCanvas.getContext('2d');
     tempCanvas.width = canvas.width;
     tempCanvas.height = canvas.height;
-
-    // Fill background with white
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
-    // Draw original canvas on top
     ctx.drawImage(canvas, 0, 0);
-
     const link = document.createElement('a');
     link.download = 'team_hydro_comparison.png';
     link.href = tempCanvas.toDataURL('image/png', 1.0);
     link.click();
   }
-
   function downloadMiningChart(canvasId, filename) {
     const canvas = document.getElementById(canvasId);
     const tempCanvas = document.createElement('canvas');
     const ctx = tempCanvas.getContext('2d');
-    
     tempCanvas.width = canvas.width;
     tempCanvas.height = canvas.height;
-    
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
     ctx.drawImage(canvas, 0, 0);
-    
     const link = document.createElement('a');
     link.download = filename;
     link.href = tempCanvas.toDataURL('image/png', 1.0);
     link.click();
   }
-
   function downloadBothMiningCharts() {
     const yourCanvas = document.getElementById('yourTeamChart');
     const enemyCanvas = document.getElementById('enemyTeamChart');
     const tempCanvas = document.createElement('canvas');
     const ctx = tempCanvas.getContext('2d');
-    
     tempCanvas.width = Math.max(yourCanvas.width, enemyCanvas.width);
     tempCanvas.height = yourCanvas.height + enemyCanvas.height + 40;
-    
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
     ctx.drawImage(yourCanvas, 0, 0);
     ctx.drawImage(enemyCanvas, 0, yourCanvas.height + 20);
-    
     const link = document.createElement('a');
     link.download = 'both_teams_mining_comparison.png';
     link.href = tempCanvas.toDataURL('image/png', 1.0);
