@@ -134,7 +134,6 @@
       border-radius: 32px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.18);
     }
-    /* Colored backgrounds for results (Hydro Output/Mining Speed) */
     #yourTeam .results {
       background: var(--your-team-light-blue);
     }
@@ -154,7 +153,6 @@
     #enemyTeam h2 {
       color: #b22240;
     }
-    /* Table with rounded corners (32px) */
     table {
       width: 100%;
       border-collapse: separate;
@@ -164,19 +162,15 @@
       background: white;
       box-shadow: 0 2px 12px rgba(0,0,0,0.10);
     }
-    /* Top-left corner */
     table tr:first-child th:first-child {
       border-top-left-radius: 32px;
     }
-    /* Top-right corner */
     table tr:first-child th:last-child {
       border-top-right-radius: 32px;
     }
-    /* Bottom-left corner */
     table tr:last-child td:first-child {
       border-bottom-left-radius: 32px;
     }
-    /* Bottom-right corner */
     table tr:last-child td:last-child {
       border-bottom-right-radius: 32px;
     }
@@ -219,7 +213,6 @@
       color: #666;
       margin-top: 40px;
     }
-    /* yourTeam's csv-upload shadow same as .results */
     #yourTeam .csv-upload {
       margin: 10px 0;
       padding: 10px;
@@ -232,7 +225,6 @@
       flex-wrap: wrap;
       font-size: 1rem;
     }
-    /* enemyTeam csv-upload keep original style */
     #enemyTeam .csv-upload,
     .csv-upload:not(#yourTeam .csv-upload) {
       margin: 10px 0;
@@ -367,10 +359,81 @@
     .total-label {
       font-weight: bold;
     }
+    /* Mods Table styles */
+    #modsTeam h2 {
+      color: var(--your-team-blue);
+    }
+    #modsTeam .csv-upload {
+      margin: 10px 0;
+      padding: 10px;
+      background: var(--your-team-light-blue);
+      border-radius: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 1rem;
+    }
+    .mods-table-group {
+      margin-bottom: 32px;
+      margin-top: 24px;
+    }
+    .mods-table-group h3 {
+      margin-bottom: 8px;
+      color: #222;
+      text-align: left;
+      font-size: 1.15rem;
+      font-weight: bold;
+      padding-left: 6px;
+    }
+    .mods-table {
+      margin-bottom: 0;
+      margin-top: 0;
+      background: #fff;
+      border-radius: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      min-width: 1200px;
+    }
+    .mods-table th {
+      background: var(--your-team-light-blue);
+      color: #222;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 6px 8px;
+    }
+    .mods-table td {
+      font-size: 1rem;
+      padding: 6px 8px;
+      color: #222;
+    }
+    .mods-table tr:first-child th:first-child {
+      border-top-left-radius: 32px;
+    }
+    .mods-table tr:first-child th:last-child {
+      border-top-right-radius: 32px;
+    }
+    .mods-table tr:last-child td:first-child {
+      border-bottom-left-radius: 32px;
+    }
+    .mods-table tr:last-child td:last-child {
+      border-bottom-right-radius: 32px;
+    }
+    @media (max-width: 700px) {
+      .mods-table th, .mods-table td {
+        font-size: 0.9rem;
+        padding: 4px 4px;
+      }
+      .mods-table-group h3 {
+        font-size: 1rem;
+      }
+    }
   </style>
   <!-- Chart.js and datalabels plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <!-- html2canvas for table image export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -379,6 +442,7 @@
 <div class="tab-nav">
   <button class="tab-btn active" data-tab="genrich">Genrich Calculator</button>
   <button class="tab-btn" data-tab="mining">Mining Speed Calculator</button>
+  <button class="tab-btn" data-tab="mods">Mods Tables</button>
 </div>
 
 <!-- Genrich Calculator -->
@@ -520,6 +584,22 @@
   </div>
 </div>
 
+<!-- Mods Table -->
+<div id="mods-table" class="calculator-content">
+  <section class="team" id="modsTeam">
+    <h2>Your Team</h2>
+    <div class="csv-upload">
+      <label class="csv-file-label" for="modsCsvFile">Choose File</label>
+      <input type="file" id="modsCsvFile" accept=".csv" />
+      <span class="csv-file-name" id="modsCsvFileName">No file chosen</span>
+      <button id="modsLoadCsvBtn">Upload Team CSV</button>
+      <small>(Upload CSV output from Compendium to auto-fill player data)</small>
+    </div>
+    <div id="modsTablesContainer"></div>
+    <div class="download-buttons" id="modsDownloadButtons"></div>
+  </section>
+</div>
+
 <div class="footer">
   Made for Hades’ Star White Star Genrich & Mining Speed Calculations.<br>Designed for desktop use. Not verified for mobile devices.
 </div>
@@ -535,11 +615,12 @@
       document.querySelectorAll('.calculator-content').forEach(content => {
         content.classList.remove('active');
       });
-      document.getElementById(`${btn.dataset.tab}-calculator`).classList.add('active');
+      document.getElementById(`${btn.dataset.tab}-calculator`)?.classList.add('active');
+      document.getElementById(`${btn.dataset.tab}-table`)?.classList.add('active');
     });
   });
 
-  // Custom file input logic for both calculators
+  // Custom file input logic for all calculators
   function setupCustomFileInput(fileInputId, fileNameId) {
     const fileInput = document.getElementById(fileInputId);
     const fileNameSpan = document.getElementById(fileNameId);
@@ -553,12 +634,13 @@
   }
   setupCustomFileInput('genrichCsvFile', 'genrichCsvFileName');
   setupCustomFileInput('miningCsvFile', 'miningCsvFileName');
+  setupCustomFileInput('modsCsvFile', 'modsCsvFileName');
 
   // ======================
   // Genrich Calculator
   // ======================
   const genrichCalculator = {
-    // Data
+    // ... (unchanged, see previous code)
     genesisData: {
       1: 60, 2: 70, 3: 80, 4: 90, 5: 100,
       6: 120, 7: 140, 8: 160, 9: 180, 10: 200,
@@ -570,22 +652,16 @@
       11: 1.20, 12: 1.24, 13: 1.28, 14: 1.32, 15: 1.40
     },
     comparisonChart: null,
-
-    // Save team data to localStorage
     saveToLocalStorage() {
       localStorage.setItem('genrichYourTeam', JSON.stringify(this.getTeamInputs('genrichYourTeamBody')));
       localStorage.setItem('genrichEnemyTeam', JSON.stringify(this.getTeamInputs('genrichEnemyTeamBody')));
     },
-
-    // Load team data from localStorage
     loadFromLocalStorage() {
       const yourTeam = localStorage.getItem('genrichYourTeam');
       const enemyTeam = localStorage.getItem('genrichEnemyTeam');
       if (yourTeam) this.setTeamInputs('genrichYourTeamBody', JSON.parse(yourTeam));
       if (enemyTeam) this.setTeamInputs('genrichEnemyTeamBody', JSON.parse(enemyTeam));
     },
-
-    // Get team input values as array of objects
     getTeamInputs(containerId) {
       const tbody = document.getElementById(containerId);
       const nameInputs = tbody.querySelectorAll('input[type="text"]');
@@ -601,8 +677,6 @@
       }
       return arr;
     },
-
-    // Set team input values from array of objects
     setTeamInputs(containerId, arr) {
       const tbody = document.getElementById(containerId);
       const nameInputs = tbody.querySelectorAll('input[type="text"]');
@@ -616,21 +690,16 @@
         }
       }
     },
-
-    // Initialize the calculator
     init() {
       this.buildTeamRows('genrichYourTeamBody');
       this.buildTeamRows('genrichEnemyTeamBody');
-      // Load from localStorage if exists
       this.loadFromLocalStorage();
-      // Set up event listeners
       ['genrichYourTeamBody', 'genrichEnemyTeamBody'].forEach(id => {
         document.getElementById(id).addEventListener('input', () => {
           this.updateAll();
           this.saveToLocalStorage();
         });
       });
-      // CSV upload
       document.getElementById('genrichLoadCsvBtn').addEventListener('click', () => {
         const fileInput = document.getElementById('genrichCsvFile');
         if (!fileInput.files.length) {
@@ -646,8 +715,6 @@
       });
       this.updateAll();
     },
-
-    // Build team rows
     buildTeamRows(containerId) {
       const tbody = document.getElementById(containerId);
       tbody.innerHTML = '';
@@ -662,8 +729,6 @@
         tbody.appendChild(tr);
       }
     },
-
-    // Calculate hydro output for a team
     calculateHydro(teamId) {
       const tbody = document.getElementById(teamId + 'Body');
       const genesisInputs = tbody.querySelectorAll('input.genesis');
@@ -686,8 +751,6 @@
       const Empty = genesisSum * enrichProduct;
       return { P1, P5, P10, Empty };
     },
-
-    // Render comparison chart
     renderComparisonChart(yourData, enemyData) {
       const ctx = document.getElementById('genrichComparisonChart').getContext('2d');
       const labels = ['P1', 'P5', 'P10', 'Empty Sector'];
@@ -761,8 +824,6 @@
       }
       this.comparisonChart = new Chart(ctx, config);
     },
-
-    // Process CSV file
     processCSV(csvData) {
       if (csvData.charCodeAt(0) === 0xFEFF) {
         csvData = csvData.substring(1);
@@ -791,12 +852,9 @@
       });
       this.updateAll();
     },
-
-    // Main update function
     updateAll() {
       const yourHydro = this.calculateHydro('genrichYourTeam');
       const enemyHydro = this.calculateHydro('genrichEnemyTeam');
-      // Update textual outputs
       document.getElementById('yourP1').textContent = yourHydro.P1.toFixed(0);
       document.getElementById('yourP5').textContent = yourHydro.P5.toFixed(0);
       document.getElementById('yourP10').textContent = yourHydro.P10.toFixed(0);
@@ -813,6 +871,7 @@
   // Mining Speed Calculator
   // ======================
   const miningCalculator = {
+    // ... (unchanged, see previous code)
     minerData: {
       1: 20.0, 2: 24.0, 3: 30.0, 4: 40.0, 5: 50.0, 6: 54.5, 7: 60.0
     },
@@ -837,22 +896,16 @@
     ],
     yourTeamChart: null,
     enemyTeamChart: null,
-
-    // Save team data to localStorage
     saveToLocalStorage() {
       localStorage.setItem('miningYourTeam', JSON.stringify(this.getTeamInputs('miningYourTeamBody')));
       localStorage.setItem('miningEnemyTeam', JSON.stringify(this.getTeamInputs('miningEnemyTeamBody')));
     },
-
-    // Load team data from localStorage
     loadFromLocalStorage() {
       const yourTeam = localStorage.getItem('miningYourTeam');
       const enemyTeam = localStorage.getItem('miningEnemyTeam');
       if (yourTeam) this.setTeamInputs('miningYourTeamBody', JSON.parse(yourTeam));
       if (enemyTeam) this.setTeamInputs('miningEnemyTeamBody', JSON.parse(enemyTeam));
     },
-
-    // Get team input values as array of objects
     getTeamInputs(containerId) {
       const tbody = document.getElementById(containerId);
       const nameInputs = tbody.querySelectorAll('input[type="text"]');
@@ -872,8 +925,6 @@
       }
       return arr;
     },
-
-    // Set team input values from array of objects
     setTeamInputs(containerId, arr) {
       const tbody = document.getElementById(containerId);
       const nameInputs = tbody.querySelectorAll('input[type="text"]');
@@ -891,21 +942,16 @@
         }
       }
     },
-
-    // Initialize the calculator
     init() {
       this.buildTeamRows('miningYourTeamBody');
       this.buildTeamRows('miningEnemyTeamBody');
-      // Load from localStorage if exists
       this.loadFromLocalStorage();
-      // Set up event listeners
       ['miningYourTeamBody', 'miningEnemyTeamBody'].forEach(id => {
         document.getElementById(id).addEventListener('input', () => {
           this.updateAll();
           this.saveToLocalStorage();
         });
       });
-      // CSV upload
       document.getElementById('miningLoadCsvBtn').addEventListener('click', () => {
         const fileInput = document.getElementById('miningCsvFile');
         if (!fileInput.files.length) {
@@ -921,8 +967,6 @@
       });
       this.updateAll();
     },
-
-    // Build team rows
     buildTeamRows(containerId) {
       const tbody = document.getElementById(containerId);
       tbody.innerHTML = '';
@@ -939,8 +983,6 @@
         tbody.appendChild(tr);
       }
     },
-
-    // Calculate mining speed for a team
     calculateMiningSpeed(teamId) {
       const tbody = document.getElementById(teamId + 'Body');
       const nameInputs = tbody.querySelectorAll('input[type="text"]');
@@ -976,8 +1018,6 @@
         total: Math.round(totalSpeed)
       };
     },
-
-    // Update the speed display
     updatePlayerSpeedDisplay(teamId, data) {
       const container = document.getElementById(teamId + 'MiningSpeeds');
       const totalElement = document.getElementById(teamId + 'Total');
@@ -985,14 +1025,11 @@
       data.players.forEach(player => {
         const item = document.createElement('div');
         item.className = 'mining-speed-item';
-        // Player name bold, value normal
         item.innerHTML = `${player.name}: <span>${player.roundedSpeed}</span>`;
         container.appendChild(item);
       });
       totalElement.textContent = data.total;
     },
-
-    // Create chart configuration
     createChartConfig(data, teamName, borderColor) {
       return {
         type: 'bar',
@@ -1079,20 +1116,14 @@
         plugins: [ChartDataLabels]
       };
     },
-
-    // Render both charts
     renderCharts(yourData, enemyData) {
       if (this.yourTeamChart) this.yourTeamChart.destroy();
       if (this.enemyTeamChart) this.enemyTeamChart.destroy();
-      // Render Your Team chart
       const yourCtx = document.getElementById('yourTeamChart').getContext('2d');
       this.yourTeamChart = new Chart(yourCtx, this.createChartConfig(yourData, 'Your Team', '#004080'));
-      // Render Enemy Team chart
       const enemyCtx = document.getElementById('enemyTeamChart').getContext('2d');
       this.enemyTeamChart = new Chart(enemyCtx, this.createChartConfig(enemyData, 'Enemy Team', '#ff6384'));
     },
-
-    // Process CSV file
     processCSV(csvData) {
       if (csvData.charCodeAt(0) === 0xFEFF) {
         csvData = csvData.substring(1);
@@ -1129,14 +1160,213 @@
       });
       this.updateAll();
     },
-
-    // Main update function
     updateAll() {
       const yourData = this.calculateMiningSpeed('miningYourTeam');
       const enemyData = this.calculateMiningSpeed('miningEnemyTeam');
       this.updatePlayerSpeedDisplay('your', yourData);
       this.updatePlayerSpeedDisplay('enemy', enemyData);
       this.renderCharts(yourData, enemyData);
+    }
+  };
+
+  // ======================
+  // Mods Table
+  // ======================
+  const modsTable = {
+    // Define mod groups and their fields
+    groups: [
+      {
+        name: "Ships",
+        fields: ["transp", "miner", "bs"]
+      },
+      {
+        name: "Transport",
+        fields: ["cargobay", "computer", "remoterepair", "rush", "stealth", "tradeburst", "shipdrone", "rsextender", "relicdrone", "dispatch", "cargorocket"]
+      },
+      {
+        name: "Mining",
+        fields: ["miningboost", "hydroreplicator", "artifactboost", "remote", "genesis", "enrich", "crunch", "hydroupload", "hydrorocket", "blastdrone"]
+      },
+      {
+        name: "Weapon",
+        fields: ["laser", "mass", "battery", "dual", "barrage", "dart", "chainray", "rocketlauncher", "pulse"]
+      },
+      {
+        name: "Shield",
+        fields: ["alpha", "delta", "passive", "omega", "blast", "mirror", "area", "motionshield"]
+      },
+      {
+        name: "Combat",
+        fields: ["emp", "solitude", "fortify", "teleport", "damageamplifier", "destiny", "barrier", "vengeance", "deltarocket", "leap", "bond", "suspend", "omegarocket", "remotebomb"]
+      },
+      {
+        name: "Drone",
+        fields: ["decoydrone", "repairdrone", "rocketdrone", "laserturret", "chainrayturret", "deltadrone", "dronesquad"]
+      }
+    ],
+    // Store parsed data
+    players: [],
+    // Store header mapping
+    headerMap: {},
+    // Save to localStorage
+    saveToLocalStorage() {
+      localStorage.setItem('modsTablePlayers', JSON.stringify(this.players));
+    },
+    // Load from localStorage
+    loadFromLocalStorage() {
+      const data = localStorage.getItem('modsTablePlayers');
+      if (data) {
+        this.players = JSON.parse(data);
+        this.renderTables();
+      }
+    },
+    // Parse CSV and update players
+    processCSV(csvData) {
+      if (csvData.charCodeAt(0) === 0xFEFF) {
+        csvData = csvData.substring(1);
+      }
+      const lines = csvData.split(/\r?\n/).map(line => line.trim()).filter(line => line !== '');
+      const headerIndex = lines.findIndex(line => line.includes('DiscordTag,Name'));
+      if (headerIndex === -1) {
+        alert('Error: Could not find header row in CSV');
+        return;
+      }
+      const headerLine = lines[headerIndex];
+      const headers = headerLine.split(',');
+      // Build header map: field name -> index
+      this.headerMap = {};
+      headers.forEach((h, idx) => {
+        this.headerMap[h.trim().toLowerCase()] = idx;
+      });
+      // Get up to 10 player lines
+      const dataLines = lines.slice(headerIndex + 1).slice(0, 10);
+      this.players = [];
+      dataLines.forEach(line => {
+        const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        // Player name: use Name field (index 1)
+        let name = (parts[this.headerMap["name"]] || "").trim();
+        if (!name) {
+           name = (parts[this.headerMap["discordtag"]] || "").trim();
+        }
+        // For each group, for each field, get value (or empty string)
+        const mods = {};
+        this.groups.forEach(group => {
+          group.fields.forEach(field => {
+            const idx = this.headerMap[field];
+            let val = (typeof idx !== "undefined" && parts[idx] !== undefined) ? parts[idx].trim() : "";
+            mods[field] = val;
+          });
+        });
+        this.players.push({ name, mods });
+      });
+      this.saveToLocalStorage();
+      this.renderTables();
+    },
+    // Render all group tables
+    renderTables() {
+      const container = document.getElementById('modsTablesContainer');
+      container.innerHTML = '';
+      if (!this.players.length) return;
+      // Store table DOM references for download
+      this.tableRefs = [];
+      this.groups.forEach((group, groupIdx) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'mods-table-group';
+        // Group title
+        const h3 = document.createElement('h3');
+        h3.textContent = group.name;
+        groupDiv.appendChild(h3);
+        // Table
+        const table = document.createElement('table');
+        table.className = 'mods-table';
+        // Table header
+        const thead = document.createElement('thead');
+        const trHead = document.createElement('tr');
+        const thName = document.createElement('th');
+        thName.textContent = 'Player Name';
+        trHead.appendChild(thName);
+        group.fields.forEach(field => {
+          const th = document.createElement('th');
+          th.textContent = field;
+          trHead.appendChild(th);
+        });
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+        // Table body
+        const tbody = document.createElement('tbody');
+        this.players.forEach(player => {
+          const tr = document.createElement('tr');
+          const tdName = document.createElement('td');
+          tdName.textContent = player.name;
+          tr.appendChild(tdName);
+          group.fields.forEach(field => {
+            const td = document.createElement('td');
+            td.textContent = player.mods[field] || '';
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        // Wrap table in scrollable div
+        const scrollDiv = document.createElement('div');
+        scrollDiv.style.overflowX = 'auto';
+        scrollDiv.style.width = '100%';
+        // For download, wrap table and title in a container
+        const tableContainer = document.createElement('div');
+        tableContainer.style.display = 'inline-block';
+        tableContainer.style.background = '#fff';
+        tableContainer.style.borderRadius = '32px';
+        tableContainer.style.boxShadow = '0 2px 12px rgba(0,0,0,0.10)';
+        tableContainer.style.padding = '16px 8px 8px 8px';
+        tableContainer.style.margin = '0 auto';
+        tableContainer.style.textAlign = 'center';
+        // Title for download (hidden visually, but included in image)
+        const downloadTitle = document.createElement('div');
+        downloadTitle.textContent = group.name;
+        downloadTitle.style.fontWeight = 'bold';
+        downloadTitle.style.fontSize = '1.15rem';
+        downloadTitle.style.color = '#222';
+        downloadTitle.style.marginBottom = '8px';
+        downloadTitle.style.textAlign = 'center';
+        tableContainer.appendChild(downloadTitle);
+        tableContainer.appendChild(table.cloneNode(true));
+        // Store for download
+        this.tableRefs[groupIdx] = { table, title: group.name, container: tableContainer };
+        scrollDiv.appendChild(table);
+        groupDiv.appendChild(scrollDiv);
+        container.appendChild(groupDiv);
+      });
+      // Render download buttons
+      this.renderDownloadButtons();
+    },
+    // Render download buttons for each table
+    renderDownloadButtons() {
+      const btnsDiv = document.getElementById('modsDownloadButtons');
+      btnsDiv.innerHTML = '';
+      if (!this.tableRefs || !this.tableRefs.length) return;
+      this.tableRefs.forEach((ref, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = `Download ${ref.title}`;
+        btn.style.margin = '0 6px 0 0';
+        btn.onclick = () => downloadModsTableAsImage(idx);
+        btnsDiv.appendChild(btn);
+      });
+    },
+    // Init mods table
+    init() {
+      this.loadFromLocalStorage();
+      document.getElementById('modsLoadCsvBtn').addEventListener('click', () => {
+        const fileInput = document.getElementById('modsCsvFile');
+        if (!fileInput.files.length) {
+          alert('Please select a CSV file first');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.processCSV(e.target.result);
+        };
+        reader.readAsText(fileInput.files[0]);
+      });
     }
   };
 
@@ -1188,10 +1418,36 @@
     link.click();
   }
 
-  // Initialize both calculators when page loads
+  // Download a mods table as PNG (only the table, no title)
+  function downloadModsTableAsImage(idx) {
+    // Get the table DOM node directly from the page
+    const table = document.querySelectorAll('.mods-table')[idx];
+    if (!table) return;
+    // Use html2canvas to render the table as image
+    html2canvas(table, {
+      backgroundColor: "#fff",
+      scale: 2,
+      useCORS: true,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: table.scrollWidth,
+      windowHeight: table.scrollHeight
+    }).then(canvas => {
+      // Create a download link and trigger download
+      const link = document.createElement('a');
+      // Use group name as filename
+      const groupName = modsTable.groups[idx]?.name || 'mods_table';
+      link.download = `${groupName.replace(/\s+/g, '_').toLowerCase()}_mods.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+    });
+  }
+
+  // Initialize all calculators when page loads
   window.onload = () => {
     genrichCalculator.init();
     miningCalculator.init();
+    modsTable.init();
   };
 </script>
 
