@@ -109,11 +109,37 @@
       display: none;
       background: white;
       padding: 15px;
-      border-radius: 16px;
+      border-radius: 32px;
       box-shadow: 0 6px 32px rgba(0,0,0,0.28);
     }
     .calculator-content.active {
       display: block;
+    }
+    .team {
+      background: white;
+      padding: 15px 20px;
+      border-radius: 32px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
+      flex: 1 1 440px;
+    }
+    #genrichChartContainer,
+    #miningChartContainer {
+      background: white;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
+      border-radius: 32px;
+    }
+    .results {
+      padding: 12px;
+      margin-top: 20px;
+      border-radius: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    /* Colored backgrounds for results (Hydro Output/Mining Speed) */
+    #yourTeam .results {
+      background: var(--your-team-light-blue);
+    }
+    #enemyTeam .results {
+      background: var(--enemy-team-light-red);
     }
     .team-container {
       display: flex;
@@ -122,28 +148,43 @@
       justify-content: center;
       margin-bottom: 20px;
     }
-    .team {
-      background: white;
-      padding: 15px 20px;
-      border-radius: 16px;
-      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
-      flex: 1 1 440px;
-    }
     #yourTeam h2 {
       color: var(--your-team-blue);
     }
     #enemyTeam h2 {
       color: #b22240;
     }
+    /* Table with rounded corners (32px) */
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 32px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    }
+    /* Top-left corner */
+    table tr:first-child th:first-child {
+      border-top-left-radius: 32px;
+    }
+    /* Top-right corner */
+    table tr:first-child th:last-child {
+      border-top-right-radius: 32px;
+    }
+    /* Bottom-left corner */
+    table tr:last-child td:first-child {
+      border-bottom-left-radius: 32px;
+    }
+    /* Bottom-right corner */
+    table tr:last-child td:last-child {
+      border-bottom-right-radius: 32px;
     }
     th, td {
       border: 1px solid #ccc;
       padding: 6px 8px;
       text-align: center;
+      background: white;
     }
     #yourTeam th {
       background: var(--your-team-light-blue);
@@ -172,33 +213,28 @@
       outline: none;
       background: #fff;
     }
-    .results {
-      padding: 12px;
-      margin-top: 20px;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-      /* No font-weight here, handled below */
-    }
-    /* Team results area backgrounds */
-    #yourTeam .results {
-      background: var(--your-team-light-blue);
-    }
-    #enemyTeam .results {
-      background: var(--enemy-team-light-red);
-    }
-    /* Chart card backgrounds and shadow match .team, background is white */
-    #genrichChartContainer,
-    #miningChartContainer {
-      background: white;
-      box-shadow: 0 6px 32px rgba(0,0,0,0.28);
-    }
     .footer {
       text-align: center;
       font-size: 0.9rem;
       color: #666;
       margin-top: 40px;
     }
-    .csv-upload {
+    /* yourTeam's csv-upload shadow same as .results */
+    #yourTeam .csv-upload {
+      margin: 10px 0;
+      padding: 10px;
+      background: var(--your-team-light-blue);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 1rem;
+    }
+    /* enemyTeam csv-upload keep original style */
+    #enemyTeam .csv-upload,
+    .csv-upload:not(#yourTeam .csv-upload) {
       margin: 10px 0;
       padding: 10px;
       background: var(--your-team-light-blue);
@@ -286,11 +322,11 @@
       margin-top: 5px;
     }
     .mining-speed-item {
-      font-weight: bold; /* Player name is bold */
+      font-weight: bold;
       white-space: nowrap;
     }
     .mining-speed-item span {
-      font-weight: normal !important; /* Value is normal */
+      font-weight: normal !important;
     }
     .chart-row {
       display: flex;
@@ -321,7 +357,6 @@
     .hydro-output span {
       font-weight: normal !important;
     }
-    /* Make Hydro Output/Mining Speed/Total label bold, value normal */
     .results > div:first-child {
       font-weight: bold;
     }
@@ -329,11 +364,11 @@
     #enemyTotal {
       font-weight: normal !important;
     }
-    /* Make "Total:" label bold in mining speed calculator */
     .total-label {
       font-weight: bold;
     }
   </style>
+  <!-- Chart.js and datalabels plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 </head>
