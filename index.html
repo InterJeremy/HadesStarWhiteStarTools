@@ -7,7 +7,7 @@
   <title>Hades' Star White Star Tools</title>
   <style>
   html {
-  overflow-y: scroll;
+    overflow-y: scroll;
   }
     :root {
       --your-team-blue: #004080;
@@ -216,7 +216,8 @@
       color: #666;
       margin-top: 40px;
     }
-    #yourTeam .csv-upload {
+    #yourTeam .csv-upload,
+    #modsTeam .csv-upload {
       margin: 10px 0;
       padding: 10px;
       background: var(--your-team-light-blue);
@@ -229,7 +230,7 @@
       font-size: 1rem;
     }
     #enemyTeam .csv-upload,
-    .csv-upload:not(#yourTeam .csv-upload) {
+    .csv-upload:not(#yourTeam .csv-upload):not(#modsTeam .csv-upload) {
       margin: 10px 0;
       padding: 10px;
       background: var(--your-team-light-blue);
@@ -366,18 +367,6 @@
     #modsTeam h2 {
       color: var(--your-team-blue);
     }
-    #modsTeam .csv-upload {
-      margin: 10px 0;
-      padding: 10px;
-      background: var(--your-team-light-blue);
-      border-radius: 32px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      font-size: 1rem;
-    }
     .mods-table-group {
       margin-bottom: 32px;
       margin-top: 24px;
@@ -431,16 +420,19 @@
         font-size: 1rem;
       }
     }
+    .feedback-input {
+    background: #f7f9fc;
+    resize: none;
+  }
   </style>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2FG21YF1K"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Y2FG21YF1K');
-</script>
-
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y2FG21YF1K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Y2FG21YF1K');
+  </script>
   <!-- Chart.js and datalabels plugin -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
@@ -611,6 +603,34 @@
     <div class="download-buttons" id="modsDownloadButtons"></div>
   </section>
 </div>
+
+<!-- Feedback Form (Formspree) -->
+<form
+  id="feedbackForm"
+  action="https://formspree.io/f/xovwwzva"
+  method="POST"
+  style="max-width:400px;margin:40px auto 0 auto;padding:20px;background:#fff;border-radius:24px;box-shadow:0 6px 32px rgba(0,0,0,0.28);display:flex;flex-direction:column;gap:12px;"
+>
+  <div style="font-size:1.25rem;font-weight:bold;color:#004080;margin-bottom:10px;text-align:center;">FeedBack</div>
+  <div id="feedback-error" style="color:#b22240;font-weight:bold;display:none;margin-bottom:8px;text-align:center;"></div>
+  <label style="font-weight:600;">
+    Your email (optional):
+    <input type="email" name="email" class="feedback-input" style="width:100%;margin-top:4px;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;">
+  </label>
+  <label style="font-weight:600;">
+    Your message:
+    <textarea name="message" class="feedback-input" style="width:100%;margin-top:4px;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;"></textarea>
+  </label>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+    <span style="color:#666;font-size:0.98rem;">
+      This tool is still under development. Feedback and suggestions are welcome!
+    </span>
+    <button type="submit" class="download-btn">
+      Send Feedback
+    </button>
+  </div>
+</form>
+
 
 <div class="footer">
   Made for Hades’ Star White Star Genrich & Mining Speed Calculations.<br>
@@ -1469,6 +1489,27 @@
     miningCalculator.init();
     modsTable.init();
   };
+
+// Custom feedback form validation
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('feedbackForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const message = form.querySelector('textarea[name="message"]').value.trim();
+      const errorDiv = document.getElementById('feedback-error');
+      if (!message) {
+        e.preventDefault();
+        errorDiv.textContent = "Please enter your feedback message.";
+        errorDiv.style.display = "block";
+        form.querySelector('textarea[name="message"]').focus();
+      } else {
+        errorDiv.style.display = "none";
+      }
+    });
+  }
+});
+
+
 </script>
 
 </body>
