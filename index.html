@@ -447,6 +447,7 @@
   <button class="tab-btn active" data-tab="genrich">Genrich Calculator</button>
   <button class="tab-btn" data-tab="mining">Mining Speed Calculator</button>
   <button class="tab-btn" data-tab="mods">Mods Tables</button>
+  <button class="tab-btn" data-tab="feedback">Feedback</button>
 </div>
 
 <!-- Genrich Calculator -->
@@ -604,31 +605,37 @@
   </section>
 </div>
 
-<!-- Feedback Form (Formspree) -->
-<form
-  id="feedbackForm"
-  action="https://formspree.io/f/xovwwzva"
-  method="POST"
-  style="max-width:400px;margin:40px auto 0 auto;padding:20px;background:#fff;border-radius:24px;box-shadow:0 6px 32px rgba(0,0,0,0.28);display:flex;flex-direction:column;gap:12px;"
->
-  <div style="font-size:1.25rem;font-weight:bold;color:#004080;margin-bottom:10px;text-align:center;">FeedBack</div>
-  <div id="feedback-error" style="color:#b22240;font-weight:bold;display:none;margin-bottom:8px;text-align:center;"></div>
-  
-  <label for="feedback-email" style="font-weight:600;text-align:left;display:block;margin-bottom:4px;">Your email (optional):</label>
-  <input id="feedback-email" type="email" name="email" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;box-sizing:border-box;">
-  
-  <label for="feedback-message" style="font-weight:600;text-align:left;display:block;margin-top:10px;margin-bottom:4px;">Your message:</label>
-  <textarea id="feedback-message" name="message" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;box-sizing:border-box;"></textarea>
-  
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
-    <span style="color:#666;font-size:0.98rem;">
-      This tool is still under development. Feedback and suggestions are welcome!
-    </span>
-    <button type="submit" class="download-btn">
-      Send Feedback
-    </button>
+
+<!-- Feedback Tab -->
+<div id="feedback-calculator" class="calculator-content">
+  <div class="team-container">
+    <section class="team" id="feedbackTeam">
+      <h2 style="color: var(--your-team-blue);">Feedback</h2>
+      <form
+        id="feedbackForm"
+        action="https://formspree.io/f/xovwwzva"
+        method="POST"
+        style="width:100%;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;"
+      >
+        <div id="feedback-error" style="color:#b22240;font-weight:bold;display:none;margin-bottom:8px;text-align:left;"></div>
+        <label for="feedback-email" style="font-weight:600;text-align:left;display:block;margin-bottom:4px;">Your email (optional):</label>
+        <input id="feedback-email" type="email" name="email" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;box-sizing:border-box;">
+        <label for="feedback-message" style="font-weight:600;text-align:left;display:block;margin-top:10px;margin-bottom:4px;">Your message:</label>
+        <textarea id="feedback-message" name="message" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;box-sizing:border-box;"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+          <span style="color:#666;font-size:0.98rem;">
+            This project is still under development. Feedback and suggestions are welcome!
+          </span>
+          <button type="submit" class="download-btn">
+            Send Feedback
+          </button>
+        </div>
+      </form>
+    </section>
   </div>
-</form>
+</div>
+
+
 
 
 <div class="footer">
