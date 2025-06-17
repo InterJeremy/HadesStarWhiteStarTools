@@ -613,14 +613,13 @@
 >
   <div style="font-size:1.25rem;font-weight:bold;color:#004080;margin-bottom:10px;text-align:center;">FeedBack</div>
   <div id="feedback-error" style="color:#b22240;font-weight:bold;display:none;margin-bottom:8px;text-align:center;"></div>
-  <label style="font-weight:600;">
-    Your email (optional):
-    <input type="email" name="email" class="feedback-input" style="width:100%;margin-top:4px;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;">
-  </label>
-  <label style="font-weight:600;">
-    Your message:
-    <textarea name="message" class="feedback-input" style="width:100%;margin-top:4px;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;"></textarea>
-  </label>
+  
+  <label for="feedback-email" style="font-weight:600;text-align:left;display:block;margin-bottom:4px;">Your email (optional):</label>
+  <input id="feedback-email" type="email" name="email" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;box-sizing:border-box;">
+  
+  <label for="feedback-message" style="font-weight:600;text-align:left;display:block;margin-top:10px;margin-bottom:4px;">Your message:</label>
+  <textarea id="feedback-message" name="message" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;box-sizing:border-box;"></textarea>
+  
   <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
     <span style="color:#666;font-size:0.98rem;">
       This tool is still under development. Feedback and suggestions are welcome!
