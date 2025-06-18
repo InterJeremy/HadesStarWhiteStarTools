@@ -443,11 +443,46 @@
 
 <h1>Hades' Star White Star Tools</h1>
 
+<!-- Feedback Button (fixed at top right) -->
+<button id="openFeedbackBtn" style="position:fixed;top:24px;right:32px;z-index:1001;">
+  Feedback
+</button>
+
+
+<!-- Feedback Modal -->
+<div id="feedback-modal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);z-index:1000;justify-content:center;align-items:center;">
+  <div style="background:#fff;border-radius:32px;box-shadow:0 6px 32px rgba(0,0,0,0.28);padding:24px 24px 16px 24px;min-width:340px;max-width:95vw;max-height:90vh;overflow:auto;position:relative;">
+    <h2 style="color: var(--your-team-blue);margin-top:0;">Feedback</h2>
+    <form
+      id="feedbackForm"
+      action="https://formspree.io/f/xovwwzva"
+      method="POST"
+      style="width:100%;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;"
+    >
+      <div id="feedback-error" style="color:#b22240;font-weight:bold;display:none;margin-bottom:8px;text-align:left;"></div>
+      <label for="feedback-email" style="font-weight:600;text-align:left;display:block;margin-bottom:4px;">Your email (optional):</label>
+      <input id="feedback-email" type="email" name="email" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;box-sizing:border-box;">
+      <label for="feedback-message" style="font-weight:600;text-align:left;display:block;margin-top:10px;margin-bottom:4px;">Your message:</label>
+      <textarea id="feedback-message" name="message" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;box-sizing:border-box;"></textarea>
+     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+        <span style="color:#666;font-size:0.98rem;">
+        This project is still under development.<br>
+        Feedback and suggestions are welcome!
+        </span>
+        <button type="submit" class="download-btn">
+          Send
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+
 <div class="tab-nav">
   <button class="tab-btn active" data-tab="genrich">Genrich Calculator</button>
   <button class="tab-btn" data-tab="mining">Mining Speed Calculator</button>
   <button class="tab-btn" data-tab="mods">Mods Tables</button>
-  <button class="tab-btn" data-tab="feedback">Feedback</button>
 </div>
 
 <!-- Genrich Calculator -->
@@ -606,34 +641,7 @@
 </div>
 
 
-<!-- Feedback Tab -->
-<div id="feedback-calculator" class="calculator-content">
-  <div class="team-container">
-    <section class="team" id="feedbackTeam">
-      <h2 style="color: var(--your-team-blue);">Feedback</h2>
-      <form
-        id="feedbackForm"
-        action="https://formspree.io/f/xovwwzva"
-        method="POST"
-        style="width:100%;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;"
-      >
-        <div id="feedback-error" style="color:#b22240;font-weight:bold;display:none;margin-bottom:8px;text-align:left;"></div>
-        <label for="feedback-email" style="font-weight:600;text-align:left;display:block;margin-bottom:4px;">Your email (optional):</label>
-        <input id="feedback-email" type="email" name="email" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;box-sizing:border-box;">
-        <label for="feedback-message" style="font-weight:600;text-align:left;display:block;margin-top:10px;margin-bottom:4px;">Your message:</label>
-        <textarea id="feedback-message" name="message" class="feedback-input" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid #cfd8dc;min-height:80px;box-sizing:border-box;"></textarea>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
-          <span style="color:#666;font-size:0.98rem;">
-            This project is still under development. Feedback and suggestions are welcome!
-          </span>
-          <button type="submit" class="download-btn">
-            Send Feedback
-          </button>
-        </div>
-      </form>
-    </section>
-  </div>
-</div>
+
 
 
 
@@ -1495,6 +1503,33 @@
     miningCalculator.init();
     modsTable.init();
   };
+
+// Feedback modal logic
+document.addEventListener('DOMContentLoaded', function() {
+  const openBtn = document.getElementById('openFeedbackBtn');
+  const modal = document.getElementById('feedback-modal');
+  if (openBtn && modal) {
+    openBtn.addEventListener('click', () => {
+      // Detect if body has vertical scrollbar
+      const hasScrollbar = document.body.scrollHeight > window.innerHeight;
+      if (hasScrollbar) {
+        document.body.style.paddingRight = '17px'; // typical scrollbar width
+      }
+      document.body.style.overflow = 'hidden';
+      modal.style.display = 'flex';
+    });
+  }
+  // Click outside modal content to close
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+      }
+    });
+  }
+});
 
 // Custom feedback form validation
 document.addEventListener('DOMContentLoaded', function() {
